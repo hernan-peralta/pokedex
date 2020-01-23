@@ -1,4 +1,3 @@
-// const urlDefault = https://pokeapi.co/api/v2/pokemon/1/
 const idDefault = '1';
 const url = 'https://pokeapi.co/api/v2/pokemon/'
 const $form = document.querySelector("form");
@@ -15,7 +14,6 @@ const $specialAttack = document.querySelector(".special-attack");
 const $specialDefense = document.querySelector(".special-defense");
 const $leftArrow = document.querySelector(".left-arrow");
 const $rightArrow = document.querySelector(".right-arrow");
-// const $arrow = document.querySelectorAll(".arrow");
 const $container = document.querySelector(".container");
 
 
@@ -101,5 +99,3 @@ $rightArrow.onclick = function (e) {
 
 
 grabPokemon(url + idDefault + '/');
-
-// cuando se aprete una flecha o cuando se haga una busqueda hay que resetear los valores de la planilla
