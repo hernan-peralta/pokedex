@@ -13,7 +13,7 @@ h1{
 }
 
 #left-arrow{
-    max-width:30%;
+    width:30%;
     height:auto;
     transform: rotate(180deg);
 }
@@ -24,8 +24,6 @@ h1{
 }
 
 .arrow{
-    /* max-width:10%; */
-    /* width: 50%; */
     height:auto;
     margin: auto;
     text-align: center;
