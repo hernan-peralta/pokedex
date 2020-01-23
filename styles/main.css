@@ -1,0 +1,68 @@
+body{
+    font-family: monospace;
+}
+
+form, h1{
+    text-align: center;
+}
+
+h1{
+    font-weight: 900;
+    letter-spacing: 0.164em;
+    font-size: 3em;
+}
+
+#left-arrow{
+    max-width:30%;
+    height:auto;
+    transform: rotate(180deg);
+}
+
+#right-arrow{
+    width:30%;
+    height:auto;
+}
+
+.arrow{
+    /* max-width:10%; */
+    /* width: 50%; */
+    height:auto;
+    margin: auto;
+    text-align: center;
+}
+
+#left-arrow:hover{
+    transform: rotate(180deg) scale(1.4);
+    transition: 0.3s;
+}
+
+#right-arrow:hover{
+    transform: scale(1.4);
+    transition: 0.3s;
+}
+
+.disabled{
+    visibility:hidden;
+}
+
+.pokemon-image{
+    width:30%;
+    height:auto;
+    margin-bottom: -5%;
+}
+
+.body{
+    display: flex;
+}
+
+li{
+    list-style: none 
+}
+
+.container{
+    text-align: center;
+    width: 200em;
+    height: 40em;
+    line-height: 1.4em;
+    font-size: 1.4em;
+}
