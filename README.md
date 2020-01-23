@@ -1,6 +1,6 @@
 # pokedex
 
-A simple Pokedex powered by a Restful API
+A simple Pokedex powered by a RESTful API
 
 - HTML
 - CSS
