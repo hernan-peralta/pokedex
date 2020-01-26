@@ -17,15 +17,11 @@ const $rightArrow = document.querySelector(".right-arrow");
 const $container = document.querySelector(".container");
 
 
-let pokemon;
-
-
 function grabPokemon(url) {
     fetch(url)
         .then(res => res.json())
 
         .then(responseJSON => {
-            pokemon = responseJSON;
             if (responseJSON.id === 1){
                 $leftArrow.classList.add('disabled');
                 $rightArrow.classList.remove('disabled');
@@ -38,6 +34,7 @@ function grabPokemon(url) {
                 $leftArrow.classList.remove('disabled');
                 $rightArrow.classList.remove('disabled');
             }
+            $container.dataset.pokemonId = responseJSON.id;
             renderContent(responseJSON.name, responseJSON.height, responseJSON.weight, responseJSON.types, responseJSON.stats, responseJSON.sprites.front_default);
         })
 }
@@ -89,12 +86,12 @@ $form.onsubmit = event =>{
 
 
 $leftArrow.onclick = function (e) {
-    grabPokemon(url + (pokemon.id - 1) + '/');
+    grabPokemon(url + (Number($container.dataset.pokemonId) - 1) + '/');
 }
 
 
 $rightArrow.onclick = function (e) {
-    grabPokemon(url + (pokemon.id + 1) + '/');
+    grabPokemon(url + (Number($container.dataset.pokemonId) + 1) + '/');
 }
 
 
