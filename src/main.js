@@ -1,4 +1,4 @@
-const navigationURL = 'https://pokeapi.co/api/v2/pokemon/?offset=0&limit=1';
+let currentPokemonURL = 'https://pokeapi.co/api/v2/pokemon/?offset=0&limit=1';
 const $form = document.querySelector("form");
 const $name = document.querySelector(".name");
 const $pokemonImage = document.querySelector(".pokemon-image");
@@ -16,39 +16,55 @@ const $rightArrow = document.querySelector(".right-arrow");
 const $container = document.querySelector(".container");
 
 
-let pokemon;
 
-
-function navigatePokemons(navigationURL) {
-    fetch(navigationURL)
+function navigatePokemons(url) {
+    const urlInMemory = JSON.parse(localStorage.getItem(url));
+    if (urlInMemory){
+        currentPokemonURL = urlInMemory;
+        handleArrowBehaviour(urlInMemory["previous"], urlInMemory["next"]);
+        return grabPokemon(urlInMemory["results"][0]["url"]);
+    }
+    fetch(url)
         .then(res => res.json())
 
         .then(responseJSON =>{
-            pokemon = responseJSON;
-            if (responseJSON.previous === null){
-                $leftArrow.classList.add('disabled');
-                $rightArrow.classList.remove('disabled');
-            }
-            else if (responseJSON.next === null){
-                $rightArrow.classList.add('disabled');
-                $leftArrow.classList.remove('disabled');
-            }
-            else {
-                $leftArrow.classList.remove('disabled');
-                $rightArrow.classList.remove('disabled');
-            }
+            localStorage.setItem(url, JSON.stringify(responseJSON));
+            currentPokemonURL = responseJSON;
+            handleArrowBehaviour(responseJSON.previous, responseJSON.next);
             grabPokemon(responseJSON["results"][0]["url"])
         })
 }
 
 
 function grabPokemon(url) {
+    const pokemonInMemory = JSON.parse(localStorage.getItem(url));
+    if (pokemonInMemory){
+        return renderContent(pokemonInMemory.name, pokemonInMemory.height, pokemonInMemory.weight, pokemonInMemory.types, pokemonInMemory.stats, pokemonInMemory.sprites.front_default);
+    }
+
     fetch(url)
         .then(res => res.json())
 
         .then(responseJSON => {
+            localStorage.setItem(url, JSON.stringify(responseJSON));
             renderContent(responseJSON.name, responseJSON.height, responseJSON.weight, responseJSON.types, responseJSON.stats, responseJSON.sprites.front_default);
         })
+}
+
+
+function handleArrowBehaviour(previous, next) {
+    if (previous === null){
+        $leftArrow.classList.add('disabled');
+        $rightArrow.classList.remove('disabled');
+    }
+    else if (next === null){
+        $rightArrow.classList.add('disabled');
+        $leftArrow.classList.remove('disabled');
+    }
+    else {
+        $leftArrow.classList.remove('disabled');
+        $rightArrow.classList.remove('disabled');
+    }
 }
 
 
@@ -90,21 +106,21 @@ function resetContent() {
 
 
 $form.onsubmit = event =>{
-    const pokemon = document.querySelector('.search').value;
+    const pokemonSearch = document.querySelector('.search').value;
     resetContent();
-    grabPokemon('https://pokeapi.co/api/v2/pokemon/' + `${pokemon.toLowerCase()}`);
+    grabPokemon('https://pokeapi.co/api/v2/pokemon/' + `${pokemonSearch.toLowerCase()}`);
     event.preventDefault();
 }
 
 
 $leftArrow.onclick = function (e) {
-    navigatePokemons(pokemon["previous"]);
+    navigatePokemons(currentPokemonURL["previous"]);
 }
 
 
 $rightArrow.onclick = function (e) {
-    navigatePokemons(pokemon["next"]);
+    navigatePokemons(currentPokemonURL["next"]);
 }
 
 
-navigatePokemons(navigationURL);
+navigatePokemons(currentPokemonURL);
