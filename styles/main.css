@@ -64,3 +64,12 @@ li{
     line-height: 1.4em;
     font-size: 1.4em;
 }
+
+.stats{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+#canvas{
+    width: 50%;
+}

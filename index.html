@@ -34,14 +34,19 @@
                 <div>Weight: <span class="weight"></span></div>
                 <label for="types">Types: </label>
                 <div class="types" name="types"></div>
-                <div>
-                    <h3>Stats</h3>
-                    <div>HP: <span class="hp"></span></div>
-                    <div>Attack: <span class="attack"></span></div>
-                    <div>Defense: <span class="defense"></span></div>
-                    <div>Speed: <span class="speed"></span></div>
-                    <div>Special attack: <span class="special-attack"></span></div>
-                    <div>Special defense: <span class="special-defense"></span></div>
+                <div class="stats">
+                    <div id="text-stats">
+                        <h3>Stats</h3>
+                        <div>HP: <span class="hp"></span></div>
+                        <div>Attack: <span class="attack"></span></div>
+                        <div>Defense: <span class="defense"></span></div>
+                        <div>Speed: <span class="speed"></span></div>
+                        <div>Special attack: <span class="special-attack"></span></div>
+                        <div>Special defense: <span class="special-defense"></span></div>
+                    </div>
+                    <div id="canvas">
+                        <canvas id="myChart" width="200" height="200"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
@@ -52,7 +57,7 @@
 
     </div>
 
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
     <script src='src/main.js'></script>
 </body>
 
