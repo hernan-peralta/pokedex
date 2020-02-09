@@ -1,5 +1,4 @@
-const idDefault = '1';
-const url = 'https://pokeapi.co/api/v2/pokemon/'
+const navigationURL = 'https://pokeapi.co/api/v2/pokemon/?offset=0&limit=1';
 const $form = document.querySelector("form");
 const $name = document.querySelector(".name");
 const $pokemonImage = document.querySelector(".pokemon-image");
@@ -17,16 +16,20 @@ const $rightArrow = document.querySelector(".right-arrow");
 const $container = document.querySelector(".container");
 
 
-function grabPokemon(url) {
-    fetch(url)
+let pokemon;
+
+
+function navigatePokemons(navigationURL) {
+    fetch(navigationURL)
         .then(res => res.json())
 
-        .then(responseJSON => {
-            if (responseJSON.id === 1){
+        .then(responseJSON =>{
+            pokemon = responseJSON;
+            if (responseJSON.previous === null){
                 $leftArrow.classList.add('disabled');
                 $rightArrow.classList.remove('disabled');
             }
-            else if (responseJSON.id === 807){
+            else if (responseJSON.next === null){
                 $rightArrow.classList.add('disabled');
                 $leftArrow.classList.remove('disabled');
             }
@@ -34,7 +37,16 @@ function grabPokemon(url) {
                 $leftArrow.classList.remove('disabled');
                 $rightArrow.classList.remove('disabled');
             }
-            $container.dataset.pokemonId = responseJSON.id;
+            grabPokemon(responseJSON["results"][0]["url"])
+        })
+}
+
+
+function grabPokemon(url) {
+    fetch(url)
+        .then(res => res.json())
+
+        .then(responseJSON => {
             renderContent(responseJSON.name, responseJSON.height, responseJSON.weight, responseJSON.types, responseJSON.stats, responseJSON.sprites.front_default);
         })
 }
@@ -47,9 +59,9 @@ function renderContent(name, height, weight, types, stats, imgURL) {
     $weight.innerText = weight + '00 g';
 
     for (let i = 0; i < types.length; i++) {
-        let div = document.createElement('div');
-        div.innerText = types[i].type.name;
-        $types.appendChild(div);
+        let divTypes = document.createElement('div');
+        divTypes.innerText = types[i].type.name;
+        $types.appendChild(divTypes);
     }
 
     $pokemonImage.setAttribute('src', imgURL);
@@ -80,19 +92,19 @@ function resetContent() {
 $form.onsubmit = event =>{
     const pokemon = document.querySelector('.search').value;
     resetContent();
-    grabPokemon(url + `${pokemon.toLowerCase()}`);
+    grabPokemon('https://pokeapi.co/api/v2/pokemon/' + `${pokemon.toLowerCase()}`);
     event.preventDefault();
 }
 
 
 $leftArrow.onclick = function (e) {
-    grabPokemon(url + (Number($container.dataset.pokemonId) - 1) + '/');
+    navigatePokemons(pokemon["previous"]);
 }
 
 
 $rightArrow.onclick = function (e) {
-    grabPokemon(url + (Number($container.dataset.pokemonId) + 1) + '/');
+    navigatePokemons(pokemon["next"]);
 }
 
 
-grabPokemon(url + idDefault + '/');
+navigatePokemons(navigationURL);
