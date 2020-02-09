@@ -14,6 +14,9 @@ const $specialDefense = document.querySelector(".special-defense");
 const $leftArrow = document.querySelector(".left-arrow");
 const $rightArrow = document.querySelector(".right-arrow");
 const $container = document.querySelector(".container");
+const $toggleTextChart = document.querySelector("#toggle-visibility");
+const $textStats = document.querySelector("#text-stats");
+const $canvas = document.querySelector("#canvas");
 let ctx = document.getElementById('myChart');
 
 function drawChart(array){
@@ -23,6 +26,7 @@ function drawChart(array){
             labels: ['HP', 'Attack', 'Defense', 'Speed', 'Special Attack', 'Special Defense'],
             datasets: [{
                 data: array,
+                label: 'Stats',
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.5)',
                     'rgba(54, 162, 235, 0.5)',
@@ -145,6 +149,17 @@ function resetContent() {
     $hp.innerText = '';
 }
 
+
+$toggleTextChart.onclick = ()=>{
+    if ($textStats.classList.contains("toggleVisibility")){
+        $textStats.classList.remove("toggleVisibility");
+        $canvas.classList.add("toggleVisibility");
+    }
+    else{
+        $textStats.classList.add("toggleVisibility");
+        $canvas.classList.remove("toggleVisibility");
+    }
+}
 
 $form.onsubmit = event =>{
     const pokemonSearch = document.querySelector('.search').value;

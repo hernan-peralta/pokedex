@@ -65,11 +65,12 @@ li{
     font-size: 1.4em;
 }
 
-.stats{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-}
 
 #canvas{
-    width: 50%;
+    margin: 0 auto;
+    width: 35%;
+}
+
+.toggleVisibility{
+    display: none;
 }
