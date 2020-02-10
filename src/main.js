@@ -151,14 +151,8 @@ function resetContent() {
 
 
 $toggleTextChart.onclick = ()=>{
-    if ($textStats.classList.contains("toggleVisibility")){
-        $textStats.classList.remove("toggleVisibility");
-        $canvas.classList.add("toggleVisibility");
-    }
-    else{
-        $textStats.classList.add("toggleVisibility");
-        $canvas.classList.remove("toggleVisibility");
-    }
+    $textStats.classList.toggle("toggleVisibility")
+    $canvas.classList.toggle("toggleVisibility")
 }
 
 $form.onsubmit = event =>{
