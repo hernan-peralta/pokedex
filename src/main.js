@@ -14,7 +14,52 @@ const $specialDefense = document.querySelector(".special-defense");
 const $leftArrow = document.querySelector(".left-arrow");
 const $rightArrow = document.querySelector(".right-arrow");
 const $container = document.querySelector(".container");
+const $toggleTextChart = document.querySelector("#toggle-visibility");
+const $textStats = document.querySelector("#text-stats");
+const $canvas = document.querySelector("#canvas");
+const $buttonReverse = document.querySelector("#button-reverse");
+let ctx = document.getElementById('myChart');
 
+
+function drawChart(array){
+    let myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['HP', 'Attack', 'Defense', 'Speed', 'Special Attack', 'Special Defense'],
+            datasets: [{
+                data: array,
+                label: 'Stats',
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.5)',
+                    'rgba(54, 162, 235, 0.5)',
+                    'rgba(255, 206, 86, 0.5)',
+                    'rgba(75, 192, 192, 0.5)',
+                    'rgba(153, 102, 255, 0.5)',
+                    'rgba(255, 159, 64, 0.5)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+    return myChart;
+}
 
 
 function navigatePokemons(url) {
@@ -39,7 +84,7 @@ function navigatePokemons(url) {
 function grabPokemon(url) {
     const pokemonInMemory = JSON.parse(localStorage.getItem(url));
     if (pokemonInMemory){
-        return renderContent(pokemonInMemory.name, pokemonInMemory.height, pokemonInMemory.weight, pokemonInMemory.types, pokemonInMemory.stats, pokemonInMemory.sprites.front_default);
+        return renderContent(pokemonInMemory.name, pokemonInMemory.height, pokemonInMemory.weight, pokemonInMemory.types, pokemonInMemory.stats, pokemonInMemory.sprites.front_default, pokemonInMemory.sprites.back_default);
     }
 
     fetch(url)
@@ -47,7 +92,7 @@ function grabPokemon(url) {
 
         .then(responseJSON => {
             localStorage.setItem(url, JSON.stringify(responseJSON));
-            renderContent(responseJSON.name, responseJSON.height, responseJSON.weight, responseJSON.types, responseJSON.stats, responseJSON.sprites.front_default);
+            renderContent(responseJSON.name, responseJSON.height, responseJSON.weight, responseJSON.types, responseJSON.stats, responseJSON.sprites.front_default, responseJSON.sprites.back_default);
         })
 }
 
@@ -68,7 +113,7 @@ function handleArrowBehaviour(previous, next) {
 }
 
 
-function renderContent(name, height, weight, types, stats, imgURL) {
+function renderContent(name, height, weight, types, stats, frontImgURL, backImgURL) {
     resetContent();
     $name.innerText = name[0].toUpperCase() + name.slice(1);
     $height.innerText = height + '0 cm';
@@ -80,7 +125,10 @@ function renderContent(name, height, weight, types, stats, imgURL) {
         $types.appendChild(divTypes);
     }
 
-    $pokemonImage.setAttribute('src', imgURL);
+    $pokemonImage.setAttribute('src', frontImgURL);
+    $pokemonImage.dataset.backsrc = backImgURL;
+
+    drawChart([stats[5].base_stat, stats[4].base_stat, stats[3].base_stat, stats[0].base_stat, stats[2].base_stat, stats[1].base_stat]);
 
     $speed.innerText = stats[0].base_stat;
     $specialDefense.innerText = stats[1].base_stat;
@@ -105,7 +153,13 @@ function resetContent() {
 }
 
 
-$form.onsubmit = event =>{
+$toggleTextChart.onclick = function toggleTextChart(){
+    $textStats.classList.toggle("toggleVisibility");
+    $canvas.classList.toggle("toggleVisibility");
+}
+
+
+$form.onsubmit = function submitForm(event){
     const pokemonSearch = document.querySelector('.search').value;
     resetContent();
     grabPokemon('https://pokeapi.co/api/v2/pokemon/' + `${pokemonSearch.toLowerCase()}`);
@@ -113,14 +167,21 @@ $form.onsubmit = event =>{
 }
 
 
-$leftArrow.onclick = function (e) {
+$leftArrow.onclick = function previousPokemon() {
     navigatePokemons(currentPokemonURL["previous"]);
 }
 
 
-$rightArrow.onclick = function (e) {
+$rightArrow.onclick = function nextPokemon() {
     navigatePokemons(currentPokemonURL["next"]);
 }
+
+
+$buttonReverse.onclick = function showPokemonBack(){
+    let imgSrc = $pokemonImage.getAttribute('src');
+    $pokemonImage.setAttribute('src', $pokemonImage.dataset.backsrc);
+    $pokemonImage.dataset.backsrc = imgSrc;
+ }
 
 
 navigatePokemons(currentPokemonURL);
