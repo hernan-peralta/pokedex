@@ -26,15 +26,19 @@
         </div>
 
         <div class="container">
-            <div class="image-holder"><img src="" class="pokemon-image" alt="pokemon"></div>
-
+            <div class="image-holder">
+                <img src="" class="pokemon-image" id="pokemon-front" data-backsrc="" alt="pokemon">
+                <button id="button-reverse">
+                    <img src="refresh-arrow.svg" id="refresh-arrow" alt="">
+                </button>
+            </div>
             <div class="data">
                 <h2 class="name"></h2>
                 <div>Height: <span class="height"></span></div>
                 <div>Weight: <span class="weight"></span></div>
                 <label for="types">Types: </label>
                 <div class="types" name="types"></div>
-                <div class="stats"> 
+                <div class="stats">
                     <button id="toggle-visibility">Toggle text/chart</button>
                     <div id="text-stats">
                         <h3>Stats</h3>

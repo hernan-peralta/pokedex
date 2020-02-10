@@ -17,7 +17,9 @@ const $container = document.querySelector(".container");
 const $toggleTextChart = document.querySelector("#toggle-visibility");
 const $textStats = document.querySelector("#text-stats");
 const $canvas = document.querySelector("#canvas");
+const $buttonReverse = document.querySelector("#button-reverse");
 let ctx = document.getElementById('myChart');
+
 
 function drawChart(array){
     let myChart = new Chart(ctx, {
@@ -82,7 +84,7 @@ function navigatePokemons(url) {
 function grabPokemon(url) {
     const pokemonInMemory = JSON.parse(localStorage.getItem(url));
     if (pokemonInMemory){
-        return renderContent(pokemonInMemory.name, pokemonInMemory.height, pokemonInMemory.weight, pokemonInMemory.types, pokemonInMemory.stats, pokemonInMemory.sprites.front_default);
+        return renderContent(pokemonInMemory.name, pokemonInMemory.height, pokemonInMemory.weight, pokemonInMemory.types, pokemonInMemory.stats, pokemonInMemory.sprites.front_default, pokemonInMemory.sprites.back_default);
     }
 
     fetch(url)
@@ -90,7 +92,7 @@ function grabPokemon(url) {
 
         .then(responseJSON => {
             localStorage.setItem(url, JSON.stringify(responseJSON));
-            renderContent(responseJSON.name, responseJSON.height, responseJSON.weight, responseJSON.types, responseJSON.stats, responseJSON.sprites.front_default);
+            renderContent(responseJSON.name, responseJSON.height, responseJSON.weight, responseJSON.types, responseJSON.stats, responseJSON.sprites.front_default, responseJSON.sprites.back_default);
         })
 }
 
@@ -111,7 +113,7 @@ function handleArrowBehaviour(previous, next) {
 }
 
 
-function renderContent(name, height, weight, types, stats, imgURL) {
+function renderContent(name, height, weight, types, stats, frontImgURL, backImgURL) {
     resetContent();
     $name.innerText = name[0].toUpperCase() + name.slice(1);
     $height.innerText = height + '0 cm';
@@ -123,7 +125,8 @@ function renderContent(name, height, weight, types, stats, imgURL) {
         $types.appendChild(divTypes);
     }
 
-    $pokemonImage.setAttribute('src', imgURL);
+    $pokemonImage.setAttribute('src', frontImgURL);
+    $pokemonImage.dataset.backsrc = backImgURL;
 
     drawChart([stats[5].base_stat, stats[4].base_stat, stats[3].base_stat, stats[0].base_stat, stats[2].base_stat, stats[1].base_stat]);
 
@@ -150,12 +153,13 @@ function resetContent() {
 }
 
 
-$toggleTextChart.onclick = ()=>{
-    $textStats.classList.toggle("toggleVisibility")
-    $canvas.classList.toggle("toggleVisibility")
+$toggleTextChart.onclick = function toggleTextChart(){
+    $textStats.classList.toggle("toggleVisibility");
+    $canvas.classList.toggle("toggleVisibility");
 }
 
-$form.onsubmit = event =>{
+
+$form.onsubmit = function submitForm(event){
     const pokemonSearch = document.querySelector('.search').value;
     resetContent();
     grabPokemon('https://pokeapi.co/api/v2/pokemon/' + `${pokemonSearch.toLowerCase()}`);
@@ -163,14 +167,21 @@ $form.onsubmit = event =>{
 }
 
 
-$leftArrow.onclick = function (e) {
+$leftArrow.onclick = function previousPokemon() {
     navigatePokemons(currentPokemonURL["previous"]);
 }
 
 
-$rightArrow.onclick = function (e) {
+$rightArrow.onclick = function nextPokemon() {
     navigatePokemons(currentPokemonURL["next"]);
 }
+
+
+$buttonReverse.onclick = function showPokemonBack(){
+    let imgSrc = $pokemonImage.getAttribute('src');
+    $pokemonImage.setAttribute('src', $pokemonImage.dataset.backsrc);
+    $pokemonImage.dataset.backsrc = imgSrc;
+ }
 
 
 navigatePokemons(currentPokemonURL);

@@ -74,3 +74,54 @@ li{
 .toggleVisibility{
     display: none;
 }
+
+
+.image-holder{
+    position: relative;
+}
+
+
+#button-reverse{
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    top: 50%;
+    border-radius: 50%;
+    background-color: white;
+    border-color: black;
+}
+
+#button-reverse:hover {
+    background-color: #4CAF50;
+}
+
+#button-reverse:active{
+    background-color: darkgreen;
+}
+
+#refresh-arrow{
+    width: 50%;
+}
+
+
+@media (max-width: 850px){
+    #button-reverse{
+        width: 25px;
+        height: 25px;
+    }
+
+    #refresh-arrow{
+        width: 100%;
+    }
+
+    .pokemon-image{
+        width:100%;
+        height:auto;
+        margin-bottom: -5%;
+    }
+
+    #canvas{
+        margin: 0 auto;
+        width: 100%;
+    }
+}
