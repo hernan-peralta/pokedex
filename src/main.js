@@ -20,8 +20,7 @@ const $canvas = document.querySelector("#canvas");
 const $buttonReverse = document.querySelector("#button-reverse");
 let ctx = document.getElementById('myChart');
 
-
-function drawChart(array){
+function drawChart(array) {
     let myChart = new Chart(ctx, {
         type: 'bar',
         data: {
@@ -35,7 +34,7 @@ function drawChart(array){
                     'rgba(255, 206, 86, 0.5)',
                     'rgba(75, 192, 192, 0.5)',
                     'rgba(153, 102, 255, 0.5)',
-                    'rgba(255, 159, 64, 0.5)'
+                    'rgba(255, 159, 64, 0.5)',
                 ],
                 borderColor: [
                     'rgba(255, 99, 132, 1)',
@@ -43,20 +42,20 @@ function drawChart(array){
                     'rgba(255, 206, 86, 1)',
                     'rgba(75, 192, 192, 1)',
                     'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
+                    'rgba(255, 159, 64, 1)',
                 ],
-                borderWidth: 1
-            }]
+                borderWidth: 1,
+            }],
         },
         options: {
             scales: {
                 yAxes: [{
                     ticks: {
-                        beginAtZero: true
-                    }
-                }]
-            }
-        }
+                        beginAtZero: true,
+                    },
+                }],
+            },
+        },
     });
     return myChart;
 }
@@ -64,7 +63,7 @@ function drawChart(array){
 
 function navigatePokemons(url) {
     const urlInMemory = JSON.parse(localStorage.getItem(url));
-    if (urlInMemory){
+    if (urlInMemory) {
         currentPokemonURL = urlInMemory;
         handleArrowBehaviour(urlInMemory["previous"], urlInMemory["next"]);
         return grabPokemon(urlInMemory["results"][0]["url"]);
@@ -72,19 +71,20 @@ function navigatePokemons(url) {
     fetch(url)
         .then(res => res.json())
 
-        .then(responseJSON =>{
+        .then(responseJSON => {
             localStorage.setItem(url, JSON.stringify(responseJSON));
             currentPokemonURL = responseJSON;
             handleArrowBehaviour(responseJSON.previous, responseJSON.next);
-            grabPokemon(responseJSON["results"][0]["url"])
-        })
+            return grabPokemon(responseJSON["results"][0]["url"]);
+        });
 }
 
 
 function grabPokemon(url) {
     const pokemonInMemory = JSON.parse(localStorage.getItem(url));
     if (pokemonInMemory){
-        return renderContent(pokemonInMemory.name, pokemonInMemory.height, pokemonInMemory.weight, pokemonInMemory.types, pokemonInMemory.stats, pokemonInMemory.sprites.front_default, pokemonInMemory.sprites.back_default);
+        return renderContent(pokemonInMemory);
+
     }
 
     fetch(url)
@@ -92,8 +92,8 @@ function grabPokemon(url) {
 
         .then(responseJSON => {
             localStorage.setItem(url, JSON.stringify(responseJSON));
-            renderContent(responseJSON.name, responseJSON.height, responseJSON.weight, responseJSON.types, responseJSON.stats, responseJSON.sprites.front_default, responseJSON.sprites.back_default);
-        })
+            return renderContent(responseJSON);
+        });
 }
 
 
@@ -113,29 +113,30 @@ function handleArrowBehaviour(previous, next) {
 }
 
 
-function renderContent(name, height, weight, types, stats, frontImgURL, backImgURL) {
+function renderContent(pokemon) {
+    
     resetContent();
-    $name.innerText = name[0].toUpperCase() + name.slice(1);
-    $height.innerText = height + '0 cm';
-    $weight.innerText = weight + '00 g';
+    $name.innerText = pokemon.name[0].toUpperCase() + pokemon.name.slice(1);
+    $height.innerText = pokemon.height + '0 cm';
+    $weight.innerText = pokemon.weight + '00 g';
 
-    for (let i = 0; i < types.length; i++) {
+    for (let i = 0; i < pokemon.types.length; i++) {
         let divTypes = document.createElement('div');
-        divTypes.innerText = types[i].type.name;
+        divTypes.innerText = pokemon.types[i].type.name;
         $types.appendChild(divTypes);
     }
 
-    $pokemonImage.setAttribute('src', frontImgURL);
-    $pokemonImage.dataset.backsrc = backImgURL;
+    $pokemonImage.setAttribute('src', pokemon.sprites.front_default);
+    $pokemonImage.dataset.backsrc = pokemon.sprites.back_default;
 
-    drawChart([stats[5].base_stat, stats[4].base_stat, stats[3].base_stat, stats[0].base_stat, stats[2].base_stat, stats[1].base_stat]);
+    drawChart([pokemon.stats[5].base_stat, pokemon.stats[4].base_stat, pokemon.stats[3].base_stat, pokemon.stats[0].base_stat, pokemon.stats[2].base_stat, pokemon.stats[1].base_stat]);
 
-    $speed.innerText = stats[0].base_stat;
-    $specialDefense.innerText = stats[1].base_stat;
-    $specialAttack.innerText = stats[2].base_stat;
-    $defense.innerText = stats[3].base_stat;
-    $attack.innerText = stats[4].base_stat;
-    $hp.innerText = stats[5].base_stat;
+    $speed.innerText = pokemon.stats[0].base_stat;
+    $specialDefense.innerText = pokemon.stats[1].base_stat;
+    $specialAttack.innerText = pokemon.stats[2].base_stat;
+    $defense.innerText = pokemon.stats[3].base_stat;
+    $attack.innerText = pokemon.stats[4].base_stat;
+    $hp.innerText = pokemon.stats[5].base_stat;
 }
 
 
@@ -153,35 +154,35 @@ function resetContent() {
 }
 
 
-$toggleTextChart.onclick = function toggleTextChart(){
+$toggleTextChart.onclick = function toggleTextChart() {
     $textStats.classList.toggle("toggleVisibility");
     $canvas.classList.toggle("toggleVisibility");
-}
+};
 
 
-$form.onsubmit = function submitForm(event){
+$form.onsubmit = function submitForm(event) {
     const pokemonSearch = document.querySelector('.search').value;
     resetContent();
     grabPokemon('https://pokeapi.co/api/v2/pokemon/' + `${pokemonSearch.toLowerCase()}`);
     event.preventDefault();
-}
+};
 
 
 $leftArrow.onclick = function previousPokemon() {
     navigatePokemons(currentPokemonURL["previous"]);
-}
+};
 
 
 $rightArrow.onclick = function nextPokemon() {
     navigatePokemons(currentPokemonURL["next"]);
-}
+};
 
 
-$buttonReverse.onclick = function showPokemonBack(){
+$buttonReverse.onclick = function showPokemonBack() {
     let imgSrc = $pokemonImage.getAttribute('src');
     $pokemonImage.setAttribute('src', $pokemonImage.dataset.backsrc);
     $pokemonImage.dataset.backsrc = imgSrc;
- }
+};
 
 
 navigatePokemons(currentPokemonURL);
