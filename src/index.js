@@ -1,25 +1,24 @@
-import { navigatePokemons, grabPokemon } from './fetch.js';
-import { renderContent, handleArrowBehaviour, userInteraction} from './ui.js';
-
+import { grabPokemon, fetchPokemon } from './fetch.js';
+import { renderContent, handleArrowBehaviour, userInteraction } from './ui.js';
 
 
 async function actualize(url) {
-    const urlPokemonData = await navigatePokemons(url);
-    handleArrowBehaviour(urlPokemonData.previous, urlPokemonData.next);
-    // const pokemon = await grabPokemon(urlPokemonData.results[0].url);
-    // console.log(pokemon)
-    // renderContent(pokemon);
-    renderContent(await grabPokemon(urlPokemonData.results[0].url));
+    const urlPokemonData = await fetchPokemon(url);
+
+    if ("next" in urlPokemonData){
+        handleArrowBehaviour(urlPokemonData.previous, urlPokemonData.next);
+        renderContent(await grabPokemon(urlPokemonData.results[0].url));
+    }
+    else{
+        renderContent(urlPokemonData);
+    }
 }
 
 
-function renderPage(){
-    // const data = userInteraction();
+function initialize(){
     actualize();
     userInteraction(actualize);
-    // actualize(userInteraction());
 }
 
 
-renderPage();
-// actualize();
+initialize();

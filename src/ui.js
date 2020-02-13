@@ -80,7 +80,6 @@ export function handleArrowBehaviour(previous, next) {
 
 
 export function renderContent(pokemon) {
-    
   resetContent();
   $name.innerText = pokemon.name[0].toUpperCase() + pokemon.name.slice(1);
   $height.innerText = pokemon.height + '0 cm';
@@ -136,13 +135,10 @@ export function userInteraction(callback){
     callback($leftArrow.dataset.url);
   })
 
-
   $form.addEventListener("submit", ()=>{
     const pokemonSearch = document.querySelector('.search').value;
-
     event.preventDefault();
-    console.log("hola");
-    // callback('https://pokeapi.co/api/v2/pokemon/' + `${pokemonSearch.toLowerCase()}`);
+    callback('https://pokeapi.co/api/v2/pokemon/' + `${pokemonSearch.toLowerCase()}`);
   })
 }
 
