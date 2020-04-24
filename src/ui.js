@@ -87,6 +87,7 @@ export function renderContent(pokemon) {
 
   for (let i = 0; i < pokemon.types.length; i++) {
       let divTypes = document.createElement('div');
+      divTypes.classList.add("tipo");
       divTypes.innerText = pokemon.types[i].type.name;
       $types.appendChild(divTypes);
   }
@@ -135,6 +136,14 @@ export function userInteraction(callback){
     callback($leftArrow.dataset.url);
   })
 
+  $toggleTextChart.addEventListener("click", () => {
+    toggleTextChart()
+  });
+
+  $buttonReverse.addEventListener("click", () => {
+    showPokemonBack()
+  })
+
   $form.addEventListener("submit", ()=>{
     const pokemonSearch = document.querySelector('.search').value;
     event.preventDefault();
@@ -148,8 +157,3 @@ function showPokemonBack() {
   $pokemonImage.setAttribute('src', $pokemonImage.dataset.backsrc);
   $pokemonImage.dataset.backsrc = imgSrc;
 }
-
-
-$toggleTextChart.onclick = toggleTextChart;
-
-$buttonReverse.onclick = showPokemonBack;
