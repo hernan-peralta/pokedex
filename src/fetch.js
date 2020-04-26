@@ -32,3 +32,4 @@ async function navigatePokemons(url) {
   localStorage.setItem(url, JSON.stringify(pokemonURLs));
   return pokemonURLs;
 }
+
