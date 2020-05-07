@@ -1,3 +1,5 @@
+/// <reference types="Cypress" />
+
 describe('Pokedex', () => {
   let fetchPolyfill;
 
@@ -10,9 +12,11 @@ describe('Pokedex', () => {
       });
 
     cy.server();
-    cy.route('https://pokeapi.co/api/v2/pokemon/?offset=0&limit=20', 'fixture:listado-pagina-1')
+    cy.route('https://pokeapi.co/api/v2/pokemon/?offset=0&limit=1', 'fixture:pagina-1')
       .as('obtenerPrimeraPagina');
 
+    cy.route('https://pokeapi.co/api/v2/pokemon/1/', 'fixture:bulbasaur')
+      .as('cargaBulbasaur')
     cy.visit('http://127.0.0.1:8080', {
       onBeforeLoad(contentWindow) {
         // eslint-disable-next-line no-param-reassign
@@ -26,8 +30,6 @@ describe('Pokedex', () => {
 
 
   it('Carga el pokedex en el primer pokemon', () => {
-    cy.server();
-    cy.route('https://pokeapi.co/api/v2/pokemon/1/', 'fixture:bulbasaur')
 
     cy.get('.name')
       .should('have.text', 'Bulbasaur')
@@ -42,6 +44,12 @@ describe('Pokedex', () => {
 
 
   it('Carga el siguiente pokemon usando la flecha hacia la derecha', () => {
+    cy.server();
+    cy.route('https://pokeapi.co/api/v2/pokemon/?offset=1&limit=1', 'fixture:pagina-2')
+      .as('cargaSegundaPagina')
+
+    cy.route('https://pokeapi.co/api/v2/pokemon/2/', 'fixture:ivysaur')
+      .as('cargaIvysaur')
     cy.get('#right-arrow').click()
     cy.get('.name')
       .should('not.have.text', 'Bulbasaur')
@@ -50,6 +58,10 @@ describe('Pokedex', () => {
 
 
   it('Carga el pokemon anterior usando la flecha hacia la izquierda', () => {
+    cy.server();
+    cy.route('https://pokeapi.co/api/v2/pokemon/?offset=0&limit=1', 'fixture:pagina-1')
+    cy.route('https://pokeapi.co/api/v2/pokemon/1/', 'fixture:bulbasaur')
+
     cy.get('#left-arrow').click()
     cy.get('.name')
       .should('have.text', 'Bulbasaur')
@@ -58,7 +70,7 @@ describe('Pokedex', () => {
 
   it('Utiliza el buscador introduciendo el nombre de un pokemon', () => {
     cy.server();
-    cy.route('https://pokeapi.co/api/v2/pokemon/pikachu/', 'fixture:pikachu')
+    cy.route('https://pokeapi.co/api/v2/pokemon/pikachu', 'fixture:pikachu')
     cy.get('.search').type('Pikachu')
     cy.get('form > input[type=submit]:nth-child(3)').click()
     cy.get('.name')
