@@ -1,0 +1,127 @@
+body{
+    font-family: monospace;
+}
+
+form, h1{
+    text-align: center;
+}
+
+h1{
+    font-weight: 900;
+    letter-spacing: 0.164em;
+    font-size: 3em;
+}
+
+#left-arrow{
+    width:30%;
+    height:auto;
+    transform: rotate(180deg);
+}
+
+#right-arrow{
+    width:30%;
+    height:auto;
+}
+
+.arrow{
+    height:auto;
+    margin: auto;
+    text-align: center;
+}
+
+#left-arrow:hover{
+    transform: rotate(180deg) scale(1.4);
+    transition: 0.3s;
+}
+
+#right-arrow:hover{
+    transform: scale(1.4);
+    transition: 0.3s;
+}
+
+.disabled{
+    visibility:hidden;
+}
+
+.pokemon-image{
+    width:30%;
+    height:auto;
+    margin-bottom: -5%;
+}
+
+.body{
+    display: flex;
+}
+
+li{
+    list-style: none 
+}
+
+.container{
+    text-align: center;
+    width: 200em;
+    height: 40em;
+    line-height: 1.4em;
+    font-size: 1.4em;
+}
+
+
+#canvas{
+    margin: 0 auto;
+    width: 35%;
+}
+
+.toggleVisibility{
+    display: none;
+}
+
+
+.image-holder{
+    position: relative;
+}
+
+
+#button-reverse{
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    top: 50%;
+    border-radius: 50%;
+    background-color: white;
+    border-color: black;
+}
+
+#button-reverse:hover {
+    background-color: #4CAF50;
+}
+
+#button-reverse:active{
+    background-color: darkgreen;
+}
+
+#refresh-arrow{
+    width: 50%;
+}
+
+
+@media (max-width: 850px){
+    #button-reverse{
+        width: 25px;
+        height: 25px;
+    }
+
+    #refresh-arrow{
+        width: 100%;
+    }
+
+    .pokemon-image{
+        width:100%;
+        height:auto;
+        margin-bottom: -5%;
+    }
+
+    #canvas{
+        margin: 0 auto;
+        width: 100%;
+    }
+}
